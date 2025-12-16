@@ -1,9 +1,9 @@
 package src.main.gui;
 
-import src.main.dao.ProductsDAO; // ✅
-
+import src.main.dao.ProductsDAO;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -18,6 +18,13 @@ public class FormProdotto extends JDialog {
     private boolean saved = false;
     private String productId = null;
 
+    // Colori personalizzati
+    private static final Color PRIMARY_COLOR = new Color(70, 130, 180);
+    private static final Color SUCCESS_COLOR = new Color(76, 175, 80);
+    private static final Color CANCEL_COLOR = new Color(158, 158, 158);
+    private static final Color BACKGROUND_COLOR = new Color(43, 43, 43);
+    private static final Color PANEL_COLOR = new Color(50, 50, 50);
+
     public FormProdotto(Frame parent, String productId) {
         super(parent, true);
         try {
@@ -28,10 +35,11 @@ public class FormProdotto extends JDialog {
 
         this.productId = productId;
 
-        setTitle(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
-        setSize(500, 600);
+        setTitle(productId == null ? "➕ Nuovo Prodotto" : "✏️ Modifica Prodotto");
+        setSize(900, 700);
         setLocationRelativeTo(parent);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0, 0));
+        getContentPane().setBackground(BACKGROUND_COLOR);
 
         initComponents();
 
@@ -41,54 +49,192 @@ public class FormProdotto extends JDialog {
     }
 
     private void initComponents() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        // Header Panel
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(PRIMARY_COLOR);
+        headerPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+
+        JLabel titleLabel = new JLabel(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        titleLabel.setForeground(Color.WHITE);
+
+        JLabel subtitleLabel = new JLabel(productId == null ? 
+            "Compila i campi per aggiungere un nuovo prodotto" : 
+            "Modifica le informazioni del prodotto");
+        subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        subtitleLabel.setForeground(new Color(230, 230, 230));
+
+        JPanel titleContainer = new JPanel(new BorderLayout(0, 5));
+        titleContainer.setOpaque(false);
+        titleContainer.add(titleLabel, BorderLayout.NORTH);
+        titleContainer.add(subtitleLabel, BorderLayout.CENTER);
+
+        headerPanel.add(titleContainer, BorderLayout.WEST);
+        add(headerPanel, BorderLayout.NORTH);
+
+        // Main Content Panel with Scroll
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(BACKGROUND_COLOR);
+        mainPanel.setBorder(new EmptyBorder(25, 25, 25, 25));
+
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBackground(PANEL_COLOR);
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+            new EmptyBorder(25, 25, 25, 25)
+        ));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
+        gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        tfCode = new JTextField();
-        tfName = new JTextField();
-        tfSalePrice = new JTextField();
-        tfPurchasePrice = new JTextField();
-        tfStock = new JTextField();
-        tfMinStock = new JTextField();
-        tfMaxStock = new JTextField();
-        tfImage = new JTextField();
-        taDescription = new JTextArea(5, 20);
+        // Inizializza componenti con stile migliorato
+        tfCode = createStyledTextField();
+        tfName = createStyledTextField();
+        tfSalePrice = createStyledTextField();
+        tfPurchasePrice = createStyledTextField();
+        tfStock = createStyledTextField();
+        tfMinStock = createStyledTextField();
+        tfMaxStock = createStyledTextField();
+        tfImage = createStyledTextField();
+        
+        taDescription = new JTextArea(4, 20);
+        taDescription.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        taDescription.setLineWrap(true);
+        taDescription.setWrapStyleWord(true);
         JScrollPane spDescription = new JScrollPane(taDescription);
+        spDescription.setBorder(BorderFactory.createLineBorder(new Color(80, 80, 80), 1));
 
         int row = 0;
-        panel.add(new JLabel("Codice Prodotto:"), gbcWithRow(gbc, row)); panel.add(tfCode, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Nome:"), gbcWithRow(gbc, row)); panel.add(tfName, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Descrizione:"), gbcWithRow(gbc, row)); panel.add(spDescription, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Prezzo Vendita:"), gbcWithRow(gbc, row)); panel.add(tfSalePrice, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Prezzo Acquisto:"), gbcWithRow(gbc, row)); panel.add(tfPurchasePrice, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Giacenza:"), gbcWithRow(gbc, row)); panel.add(tfStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Scorta Minima:"), gbcWithRow(gbc, row)); panel.add(tfMinStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Scorta Massima:"), gbcWithRow(gbc, row)); panel.add(tfMaxStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Immagine (path):"), gbcWithRow(gbc, row)); panel.add(tfImage, gbcWithRow(gbc, row++));
 
-        add(panel, BorderLayout.CENTER);
+        // Sezione Informazioni Base
+        addSectionTitle(formPanel, gbc, "📋 Informazioni Base", row++);
+        addFormField(formPanel, gbc, "Codice Prodotto *", tfCode, row++);
+        addFormField(formPanel, gbc, "Nome Prodotto *", tfName, row++);
+        
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0.3;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        JLabel lblDesc = createStyledLabel("Descrizione");
+        formPanel.add(lblDesc, gbc);
+        
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        gbc.fill = GridBagConstraints.BOTH;
+        formPanel.add(spDescription, gbc);
+        row++;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnSave = new JButton("Salva");
-        btnCancel = new JButton("Annulla");
+        // Sezione Prezzi
+        addSectionTitle(formPanel, gbc, "💰 Prezzi", row++);
+        addFormField(formPanel, gbc, "Prezzo Vendita *", tfSalePrice, row++);
+        addFormField(formPanel, gbc, "Prezzo Acquisto", tfPurchasePrice, row++);
 
-        btnSave.addActionListener(this::onSave);
+        // Sezione Magazzino
+        addSectionTitle(formPanel, gbc, "📦 Gestione Magazzino", row++);
+        addFormField(formPanel, gbc, "Giacenza Attuale", tfStock, row++);
+        addFormField(formPanel, gbc, "Scorta Minima", tfMinStock, row++);
+        addFormField(formPanel, gbc, "Scorta Massima", tfMaxStock, row++);
+
+        // Sezione Immagine
+        addSectionTitle(formPanel, gbc, "🖼️ Media", row++);
+        addFormField(formPanel, gbc, "Path Immagine", tfImage, row++);
+
+        JScrollPane scrollPane = new JScrollPane(formPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+        add(mainPanel, BorderLayout.CENTER);
+
+        // Footer Panel con bottoni
+        JPanel footerPanel = new JPanel(new BorderLayout());
+        footerPanel.setBackground(BACKGROUND_COLOR);
+        footerPanel.setBorder(new EmptyBorder(0, 25, 25, 25));
+
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        btnPanel.setOpaque(false);
+
+        btnCancel = createStyledButton("Annulla", CANCEL_COLOR);
+        btnSave = createStyledButton("💾 Salva", SUCCESS_COLOR);
+
         btnCancel.addActionListener(e -> dispose());
+        btnSave.addActionListener(this::onSave);
 
-        btnPanel.add(btnSave);
         btnPanel.add(btnCancel);
-        add(btnPanel, BorderLayout.SOUTH);
+        btnPanel.add(btnSave);
+        
+        footerPanel.add(btnPanel, BorderLayout.EAST);
+        add(footerPanel, BorderLayout.SOUTH);
     }
 
-    private GridBagConstraints gbcWithRow(GridBagConstraints gbc, int row) {
-        GridBagConstraints copy = (GridBagConstraints) gbc.clone();
-        copy.gridy = row;
-        copy.gridx = 0;
-        copy.weightx = 0.3;
-        return copy;
+    private JTextField createStyledTextField() {
+        JTextField tf = new JTextField();
+        tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+            new EmptyBorder(8, 10, 8, 10)
+        ));
+        return tf;
+    }
+
+    private JLabel createStyledLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setForeground(new Color(200, 200, 200));
+        return label;
+    }
+
+    private JButton createStyledButton(String text, Color bgColor) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setBackground(bgColor);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setBorder(new EmptyBorder(10, 25, 10, 25));
+        
+        // Hover effect
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bgColor.brighter());
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setBackground(bgColor);
+            }
+        });
+        
+        return btn;
+    }
+
+    private void addSectionTitle(JPanel panel, GridBagConstraints gbc, String title, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.insets = new Insets(row == 0 ? 0 : 20, 8, 12, 8);
+        
+        JLabel sectionLabel = new JLabel(title);
+        sectionLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        sectionLabel.setForeground(PRIMARY_COLOR);
+        
+        panel.add(sectionLabel, gbc);
+        
+        gbc.gridwidth = 1;
+        gbc.insets = new Insets(8, 8, 8, 8);
+    }
+
+    private void addFormField(JPanel panel, GridBagConstraints gbc, String labelText, JComponent field, int row) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        gbc.weightx = 0.3;
+        panel.add(createStyledLabel(labelText), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.7;
+        panel.add(field, gbc);
     }
 
     private void loadProductData() {
@@ -120,12 +266,12 @@ public class FormProdotto extends JDialog {
         String image = tfImage.getText().trim();
 
         if (code.isEmpty() || name.isEmpty() || salePrice.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Codice, Nome e Prezzo Vendita sono obbligatori", "Errore", JOptionPane.ERROR_MESSAGE);
+            showStyledError("Codice, Nome e Prezzo Vendita sono obbligatori");
             return;
         }
 
         if (productId == null && ProductsDAO.existsByCode(code)) {
-            JOptionPane.showMessageDialog(this, "Codice prodotto già esistente", "Errore", JOptionPane.ERROR_MESSAGE);
+            showStyledError("Codice prodotto già esistente");
             return;
         }
 
@@ -148,11 +294,17 @@ public class FormProdotto extends JDialog {
         dispose();
     }
 
+    private void showStyledError(String message) {
+        JOptionPane.showMessageDialog(this, 
+            message, 
+            "⚠️ Attenzione", 
+            JOptionPane.WARNING_MESSAGE);
+    }
+
     public boolean isSaved() {
         return saved;
     }
 
-    // For testing
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             FormProdotto form = new FormProdotto(null, null);

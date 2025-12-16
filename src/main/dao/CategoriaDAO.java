@@ -1,11 +1,9 @@
 package src.main.dao;
 
-import src.main.dao.csv_utils;
-
 import java.util.*;
 import java.time.LocalDate;
 
-public class categories_dao {
+public class CategoriaDAO {
 
     private static final String FILE_PATH = "data/categories.csv";
 
