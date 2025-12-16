@@ -40,7 +40,7 @@ public class SchermataCategorie extends JPanel {
         JLabel lblSearch = new JLabel("Cerca Categorie:");
         tfSearch = new JTextField(20);
         JButton btnSearch = new JButton("Cerca");
-        btnSearch.addActionListener(e -> searchProducts());
+        btnSearch.addActionListener(e -> searchCategorie());
 //        formProdotto = new FormProdotto();
         JButton btnAdd = new JButton("Aggiungi Categoria");
 //        btnAdd.addActionListener(e -> {formProdotto})
@@ -77,12 +77,12 @@ public class SchermataCategorie extends JPanel {
         }
     }
 
-    private void searchProducts() {
+    private void searchCategorie() {
         String query = tfSearch.getText().trim().toLowerCase();
         tableModel.setRowCount(0);
 
-        List<String[]> products = categories_dao.;
-        for(String[] p : products) {
+        List<String[]> categories = categories_dao.search_categories(query);
+        for(String[] p : categories) {
             if(p[1].toLowerCase().contains(query) || p[2].toLowerCase().contains(query)) {
                 Object[] row = new Object[]{
                         p[0], p[1], p[2], p[3], p[4]
