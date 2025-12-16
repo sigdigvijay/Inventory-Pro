@@ -6,13 +6,13 @@ import java.awt.*;
 import java.util.List;
 import src.main.dao.OrdineDAO;
 
-public class order_lines_dialog extends JDialog {
+public class OrderLinesDialogue extends JDialog {
 
     private JTable table;
     private DefaultTableModel tableModel;
     private String orderId;
 
-    public order_lines_dialog(JFrame parent, String orderId) {
+    public OrderLinesDialogue(JFrame parent, String orderId) {
         super(parent, "Righe Ordine", true);
         this.orderId = orderId;
 
