@@ -1,1 +1,10 @@
-1,12,andrea,prodotto,12,1,234,2,2000,,1765816140481
+ID, 2. Codice, 3. Nome, 4. Descrizione, 5. Prezzo Vendita, 6. Prezzo Acquisto, 7. Giacenza, 8. Scorta Minima.
+P001,Laptop Dell XPS,Elettronica,1299.99,5
+P002,Mouse Logitech,Accessori,29.99,15
+P003,Tastiera Meccanica,Accessori,89.99,8
+P004,Monitor 27",Elettronica,349.99,3
+P005,Webcam HD,Elettronica,79.99,0
+P006,Cuffie Bluetooth,Audio,149.99,12
+P007,SSD 1TB,Hardware,119.99,20
+P008,RAM 16GB,Hardware,79.99,0
+
