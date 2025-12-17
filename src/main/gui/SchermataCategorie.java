@@ -41,9 +41,9 @@ public class SchermataCategorie extends JPanel {
         tfSearch = new JTextField(20);
         JButton btnSearch = new JButton("Cerca");
         btnSearch.addActionListener(e -> searchCategorie());
-//        formProdotto = new FormProdotto();
+
         JButton btnAdd = new JButton("Aggiungi Categoria");
-//        btnAdd.addActionListener(e -> {formProdotto})
+
         topPanel.add(btnAdd);
         topPanel.add(lblSearch);
         topPanel.add(tfSearch);

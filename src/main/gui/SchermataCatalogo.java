@@ -41,8 +41,11 @@ public class SchermataCatalogo extends JPanel {
         JButton btnSearch = new JButton("Cerca");
         btnSearch.addActionListener(e -> searchProducts());
 //        formProdotto = new FormProdotto();
+
+// daniele
         JButton btnAdd = new JButton("Aggiungi Prodotto");
-//        btnAdd.addActionListener(e -> {formProdotto})
+        btnAdd.addActionListener(e -> new FormProdotto(null, null).setVisible(true));
+// daniele
         topPanel.add(btnAdd);
         topPanel.add(lblSearch);
         topPanel.add(tfSearch);
