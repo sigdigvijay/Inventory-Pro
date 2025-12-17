@@ -21,7 +21,7 @@ public class FormProdotto extends JDialog {
     // Colori personalizzati
     private static final Color PRIMARY_COLOR = new Color(70, 130, 180);
     private static final Color SUCCESS_COLOR = new Color(76, 175, 80);
-    private static final Color CANCEL_COLOR = new Color(158, 158, 158);
+    private static final Color CANCEL_COLOR = new Color(220, 20, 50);
     private static final Color BACKGROUND_COLOR = new Color(43, 43, 43);
     private static final Color PANEL_COLOR = new Color(50, 50, 50);
 
@@ -35,7 +35,7 @@ public class FormProdotto extends JDialog {
 
         this.productId = productId;
 
-        setTitle(productId == null ? "➕ Nuovo Prodotto" : "✏️ Modifica Prodotto");
+        setTitle(productId == null ? " Nuovo Prodotto" : " Modifica Prodotto");
         setSize(900, 700);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(0, 0));
@@ -108,7 +108,7 @@ public class FormProdotto extends JDialog {
         int row = 0;
 
         // Sezione Informazioni Base
-        addSectionTitle(formPanel, gbc, "📋 Informazioni Base", row++);
+        addSectionTitle(formPanel, gbc, " Informazioni Base", row++);
         addFormField(formPanel, gbc, "Codice Prodotto *", tfCode, row++);
         addFormField(formPanel, gbc, "Nome Prodotto *", tfName, row++);
         
@@ -127,18 +127,18 @@ public class FormProdotto extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Sezione Prezzi
-        addSectionTitle(formPanel, gbc, "💰 Prezzi", row++);
+        addSectionTitle(formPanel, gbc, " Prezzi", row++);
         addFormField(formPanel, gbc, "Prezzo Vendita *", tfSalePrice, row++);
         addFormField(formPanel, gbc, "Prezzo Acquisto", tfPurchasePrice, row++);
 
         // Sezione Magazzino
-        addSectionTitle(formPanel, gbc, "📦 Gestione Magazzino", row++);
+        addSectionTitle(formPanel, gbc, " Gestione Magazzino", row++);
         addFormField(formPanel, gbc, "Giacenza Attuale", tfStock, row++);
         addFormField(formPanel, gbc, "Scorta Minima", tfMinStock, row++);
         addFormField(formPanel, gbc, "Scorta Massima", tfMaxStock, row++);
 
         // Sezione Immagine
-        addSectionTitle(formPanel, gbc, "🖼️ Media", row++);
+        addSectionTitle(formPanel, gbc, " Media", row++);
         addFormField(formPanel, gbc, "Path Immagine", tfImage, row++);
 
         JScrollPane scrollPane = new JScrollPane(formPanel);
@@ -157,7 +157,7 @@ public class FormProdotto extends JDialog {
         btnPanel.setOpaque(false);
 
         btnCancel = createStyledButton("Annulla", CANCEL_COLOR);
-        btnSave = createStyledButton("💾 Salva", SUCCESS_COLOR);
+        btnSave = createStyledButton(" Salva", SUCCESS_COLOR);
 
         btnCancel.addActionListener(e -> dispose());
         btnSave.addActionListener(this::onSave);
