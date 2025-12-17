@@ -13,6 +13,7 @@ public class FormProdotto extends JDialog {
 
     private JTextField tfCode, tfName, tfSalePrice, tfPurchasePrice, tfStock, tfMinStock, tfMaxStock, tfImage;
     private JTextArea taDescription;
+    private JComboBox<String> cbCategory;
     private JButton btnSave, btnCancel;
 
     private boolean saved = false;
@@ -20,10 +21,26 @@ public class FormProdotto extends JDialog {
 
     // Colori personalizzati
     private static final Color PRIMARY_COLOR = new Color(70, 130, 180);
-    private static final Color SUCCESS_COLOR = new Color(76, 175, 80);
+    private static final Color SUCCESS_COLOR = new Color(36, 175, 50);
     private static final Color CANCEL_COLOR = new Color(220, 20, 50);
     private static final Color BACKGROUND_COLOR = new Color(43, 43, 43);
     private static final Color PANEL_COLOR = new Color(50, 50, 50);
+
+    // Categorie predefinite
+    private static final String[] CATEGORIES = {
+        "Seleziona categoria...",
+        "Elettronica",
+        "Alimentari",
+        "Abbigliamento",
+        "Casa e Giardino",
+        "Sport e Tempo Libero",
+        "Libri e Riviste",
+        "Giocattoli",
+        "Salute e Bellezza",
+        "Automotive",
+        "Ufficio e Cancelleria",
+        "Altro"
+    };
 
     public FormProdotto(Frame parent, String productId) {
         super(parent, true);
@@ -36,7 +53,7 @@ public class FormProdotto extends JDialog {
         this.productId = productId;
 
         setTitle(productId == null ? " Nuovo Prodotto" : " Modifica Prodotto");
-        setSize(900, 700);
+        setSize(900, 750);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(BACKGROUND_COLOR);
@@ -54,7 +71,7 @@ public class FormProdotto extends JDialog {
         headerPanel.setBackground(PRIMARY_COLOR);
         headerPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
 
-        JLabel titleLabel = new JLabel(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
+        JLabel titleLabel = new JLabel(productId == null ? "📦 Nuovo Prodotto" : "✏️ Modifica Prodotto");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
 
@@ -98,6 +115,16 @@ public class FormProdotto extends JDialog {
         tfMaxStock = createStyledTextField();
         tfImage = createStyledTextField();
         
+        // ComboBox per le categorie
+        cbCategory = new JComboBox<>(CATEGORIES);
+        cbCategory.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        cbCategory.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+            new EmptyBorder(5, 8, 5, 8)
+        ));
+        cbCategory.setBackground(new Color(60, 60, 60));
+        cbCategory.setForeground(new Color(200, 200, 200));
+        
         taDescription = new JTextArea(4, 20);
         taDescription.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         taDescription.setLineWrap(true);
@@ -108,9 +135,10 @@ public class FormProdotto extends JDialog {
         int row = 0;
 
         // Sezione Informazioni Base
-        addSectionTitle(formPanel, gbc, " Informazioni Base", row++);
+        addSectionTitle(formPanel, gbc, "📋 Informazioni Base", row++);
         addFormField(formPanel, gbc, "Codice Prodotto *", tfCode, row++);
         addFormField(formPanel, gbc, "Nome Prodotto *", tfName, row++);
+        addFormField(formPanel, gbc, "Categoria *", cbCategory, row++);
         
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -127,18 +155,18 @@ public class FormProdotto extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Sezione Prezzi
-        addSectionTitle(formPanel, gbc, " Prezzi", row++);
-        addFormField(formPanel, gbc, "Prezzo Vendita *", tfSalePrice, row++);
-        addFormField(formPanel, gbc, "Prezzo Acquisto", tfPurchasePrice, row++);
+        addSectionTitle(formPanel, gbc, "💰 Prezzi", row++);
+        addFormField(formPanel, gbc, "Prezzo Vendita (€) *", tfSalePrice, row++);
+        addFormField(formPanel, gbc, "Prezzo Acquisto (€)", tfPurchasePrice, row++);
 
         // Sezione Magazzino
-        addSectionTitle(formPanel, gbc, " Gestione Magazzino", row++);
+        addSectionTitle(formPanel, gbc, "📦 Gestione Magazzino", row++);
         addFormField(formPanel, gbc, "Giacenza Attuale", tfStock, row++);
         addFormField(formPanel, gbc, "Scorta Minima", tfMinStock, row++);
         addFormField(formPanel, gbc, "Scorta Massima", tfMaxStock, row++);
 
         // Sezione Immagine
-        addSectionTitle(formPanel, gbc, " Media", row++);
+        addSectionTitle(formPanel, gbc, "🖼️ Media", row++);
         addFormField(formPanel, gbc, "Path Immagine", tfImage, row++);
 
         JScrollPane scrollPane = new JScrollPane(formPanel);
@@ -156,8 +184,8 @@ public class FormProdotto extends JDialog {
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         btnPanel.setOpaque(false);
 
-        btnCancel = createStyledButton("Annulla", CANCEL_COLOR);
-        btnSave = createStyledButton(" Salva", SUCCESS_COLOR);
+        btnCancel = createStyledButton("✖ Annulla", CANCEL_COLOR);
+        btnSave = createStyledButton("✓ Salva", SUCCESS_COLOR);
 
         btnCancel.addActionListener(e -> dispose());
         btnSave.addActionListener(this::onSave);
@@ -249,6 +277,11 @@ public class FormProdotto extends JDialog {
                 tfMinStock.setText(p[7]);
                 tfMaxStock.setText(p[8]);
                 tfImage.setText(p[9]);
+                
+                // Carica la categoria se presente (assumendo che sia nell'indice 10)
+                if (p.length > 10 && !p[10].isEmpty()) {
+                    cbCategory.setSelectedItem(p[10]);
+                }
                 break;
             }
         }
@@ -257,6 +290,7 @@ public class FormProdotto extends JDialog {
     private void onSave(ActionEvent e) {
         String code = tfCode.getText().trim();
         String name = tfName.getText().trim();
+        String category = (String) cbCategory.getSelectedItem();
         String description = taDescription.getText().trim();
         String salePrice = tfSalePrice.getText().trim();
         String purchasePrice = tfPurchasePrice.getText().trim();
@@ -265,23 +299,49 @@ public class FormProdotto extends JDialog {
         String maxStock = tfMaxStock.getText().trim();
         String image = tfImage.getText().trim();
 
+        // Validazione campi obbligatori
         if (code.isEmpty() || name.isEmpty() || salePrice.isEmpty()) {
             showStyledError("Codice, Nome e Prezzo Vendita sono obbligatori");
             return;
         }
 
+        // Validazione categoria
+        if (category == null || category.equals("Seleziona categoria...")) {
+            showStyledError("Seleziona una categoria per il prodotto");
+            return;
+        }
+
+        // Validazione codice duplicato
         if (productId == null && ProductsDAO.existsByCode(code)) {
             showStyledError("Codice prodotto già esistente");
             return;
         }
 
+        // Validazione prezzo (deve essere un numero valido)
+        try {
+            Double.parseDouble(salePrice);
+            if (!purchasePrice.isEmpty()) {
+                Double.parseDouble(purchasePrice);
+            }
+        } catch (NumberFormatException ex) {
+            showStyledError("I prezzi devono essere numeri validi");
+            return;
+        }
+
         String id = productId != null ? productId : ProductsDAO.generateId();
         String[] productData = new String[]{
-                id, code, name, description, salePrice, purchasePrice, stock.isEmpty() ? "0" : stock,
+                id, 
+                code, 
+                name, 
+                description, 
+                salePrice, 
+                purchasePrice, 
+                stock.isEmpty() ? "0" : stock,
                 minStock.isEmpty() ? "5" : minStock,
                 maxStock.isEmpty() ? "" : maxStock,
                 image.isEmpty() ? "" : image,
-                String.valueOf(System.currentTimeMillis())
+                String.valueOf(System.currentTimeMillis()),
+                category  // Aggiunge la categoria
         };
 
         if (productId != null) {
