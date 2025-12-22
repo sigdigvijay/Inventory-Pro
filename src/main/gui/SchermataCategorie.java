@@ -1,6 +1,7 @@
 package src.main.gui;
 
 import src.main.dao.ProductsDAO;
+import src.main.dao.categories_dao;
 
 import src.main.util.Validator;
 
@@ -12,14 +13,14 @@ import java.util.List;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
-public class SchermataCatalogo extends JPanel {
+public class SchermataCategorie extends JPanel {
 
-//    private FormProdotto formProdotto;
-    private JTable tableProducts;
+    //    private FormProdotto formProdotto;
+    private JTable tableCategorie;
     private DefaultTableModel tableModel;
     private JTextField tfSearch;
 
-    public SchermataCatalogo() {
+    public SchermataCategorie() {
         try {
             UIManager.setLookAndFeel(new FlatDarkLaf());
         } catch(Exception ex) {
@@ -28,7 +29,7 @@ public class SchermataCatalogo extends JPanel {
 
         setLayout(new BorderLayout());
         initComponents();
-        loadProducts();
+        loadCategorie();
     }
 
 
@@ -36,16 +37,13 @@ public class SchermataCatalogo extends JPanel {
 
         // Top panel: search
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JLabel lblSearch = new JLabel("Cerca prodotto:");
+        JLabel lblSearch = new JLabel("Cerca Categorie:");
         tfSearch = new JTextField(20);
         JButton btnSearch = new JButton("Cerca");
-        btnSearch.addActionListener(e -> searchProducts());
-//        formProdotto = new FormProdotto();
+        btnSearch.addActionListener(e -> searchCategorie());
 
-// daniele
-        JButton btnAdd = new JButton("Aggiungi Prodotto");
-        btnAdd.addActionListener(e -> new FormProdotto(null, null).setVisible(true));
-// daniele
+        JButton btnAdd = new JButton("Aggiungi Categoria");
+
         topPanel.add(btnAdd);
         topPanel.add(lblSearch);
         topPanel.add(tfSearch);
@@ -54,40 +52,40 @@ public class SchermataCatalogo extends JPanel {
         add(topPanel, BorderLayout.NORTH);
 
         // Table for products
-        String[] columns = {"ID", "Codice", "Nome", "Descrizione", "Prezzo Vendita", "Prezzo Acquisto", "Giacenza", "Scorta Minima", "Immagine"};
+        String[] columns = {"ID", "Nome", "Descrizione", "parent_id", "color"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // non-editable
             }
         };
-        tableProducts = new JTable(tableModel);
-        tableProducts.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(tableProducts);
+        tableCategorie = new JTable(tableModel);
+        tableCategorie.setFillsViewportHeight(true);
+        JScrollPane scrollPane = new JScrollPane(tableCategorie);
 
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    private void loadProducts() {
+    private void loadCategorie() {
         tableModel.setRowCount(0); // clear table
-        List<String[]> products = ProductsDAO.getAllProducts();
-        for(String[] p : products) {
+        List<String[]> categories = categories_dao.get_all_categories();
+        for(String[] p : categories) {
             Object[] row = new Object[]{
-                    p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[9] // image path
+                    p[0], p[1], p[2], p[3], p[4]
             };
             tableModel.addRow(row);
         }
     }
 
-    private void searchProducts() {
+    private void searchCategorie() {
         String query = tfSearch.getText().trim().toLowerCase();
         tableModel.setRowCount(0);
 
-        List<String[]> products = ProductsDAO.getAllProducts();
-        for(String[] p : products) {
+        List<String[]> categories = categories_dao.search_categories(query);
+        for(String[] p : categories) {
             if(p[1].toLowerCase().contains(query) || p[2].toLowerCase().contains(query)) {
                 Object[] row = new Object[]{
-                        p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[9]
+                        p[0], p[1], p[2], p[3], p[4]
                 };
                 tableModel.addRow(row);
             }
@@ -96,13 +94,13 @@ public class SchermataCatalogo extends JPanel {
 
     // Optional: refresh table
     public void refresh() {
-        loadProducts();
+        loadCategorie();
     }
 
     // Test main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Catalogo Prodotti");
+            JFrame frame = new JFrame("Catalogo Categorie");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(900, 500);
             frame.add(new SchermataCatalogo());
