@@ -2,6 +2,7 @@ package src.main.gui;
 import src.main.gui.components.SchermataInventario ;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             System.err.println("Failed to initialize FlatLaf");
         }
@@ -171,7 +172,7 @@ public class MainFrame extends JFrame {
         btn.setPreferredSize(new Dimension(200, 66));
         btn.setMaximumSize(new Dimension(200, 66));
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btn.setMargin(new Insets(10, 15, 10, 15));
+        btn.setMargin(new Insets(10, 15, 20, 20));
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return btn;
@@ -184,7 +185,6 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Main method
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();

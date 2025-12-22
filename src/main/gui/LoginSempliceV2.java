@@ -1,8 +1,11 @@
 package src.main.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
-import src.main.logic.LoginController; // Assicurato che l'import sia corretto
+import src.main.logic.LoginController;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class LoginSempliceV2 extends JFrame {
     private JTextField userField;
@@ -11,143 +14,120 @@ public class LoginSempliceV2 extends JFrame {
     private JLabel messageLabel;
 
     public LoginSempliceV2() {
-        // Configurazione finestra
-        setTitle("InventoryPro");
-        setSize(400, 400);
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        setTitle("InventoryPro - Login");
+        setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        
-        // Panel principale
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBackground(new Color(240, 240, 240));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
-        
-        // Panel titolo 
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setBackground(new Color(240, 240, 240));
-        titlePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-        
-        JLabel managerLabel = new JLabel("InventoryPro");
-        managerLabel.setFont(new Font("Arial", Font.BOLD, 32));
-        managerLabel.setForeground(new Color(70, 130, 180));
-        managerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titlePanel.add(managerLabel);
-        
-        titlePanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        
-        JLabel titleLabel = new JLabel("Login");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titlePanel.add(titleLabel);
-        
-        mainPanel.add(titlePanel, BorderLayout.NORTH);
-        
-        // Panel centrale 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBackground(new Color(240, 240, 240));
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        
-        // Label Username
-        JLabel userLabel = new JLabel("ID:");
-        userLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        centerPanel.add(userLabel);
-        
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        
-        // Campo Username
-        userField = new JTextField();
-        userField.setFont(new Font("Arial", Font.PLAIN, 14));
-        userField.setPreferredSize(new Dimension(300, 30));
-        userField.setMaximumSize(new Dimension(300, 30));
-        userField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        centerPanel.add(userField);
-        
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-        
-        // Label Password
-        JLabel passLabel = new JLabel("Password:");
-        passLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        passLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        centerPanel.add(passLabel);
-        
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        
-        // Campo Password
-        passField = new JPasswordField();
-        passField.setFont(new Font("Arial", Font.PLAIN, 14));
-        passField.setPreferredSize(new Dimension(300, 30));
-        passField.setMaximumSize(new Dimension(300, 30));
-        passField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        centerPanel.add(passField);
-        
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        
-        // Panel in basso 
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-        bottomPanel.setBackground(new Color(240, 240, 240));
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        
-        // Bottone Login - CHIAMA LA FUNZIONE DALL'ALTRO FILE
-        loginBtn = new JButton("Accedi");
-        loginBtn.setFont(new Font("Arial", Font.BOLD, 14));
-        loginBtn.setPreferredSize(new Dimension(200, 40));
-        loginBtn.setMaximumSize(new Dimension(200, 40));
-        loginBtn.setBackground(new Color(70, 130, 180));
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFocusPainted(false);
-        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginBtn.addActionListener(e -> {
-            // Prendi i valori dai campi
-            String username = userField.getText().trim();
-            String password = new String(passField.getPassword());
-            
-            // CHIAMA LA FUNZIONE DI CONTROLLO DALL'ALTRO FILE
-            LoginController.eseguiLogin(username, password, this);
-        });
-        bottomPanel.add(loginBtn);
-        
-        // Spazio tra bottone e messaggio
-        bottomPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        
-        // Label messaggi
-        messageLabel = new JLabel(" ");
-        messageLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bottomPanel.add(messageLabel);
-        
-        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-        
+
+        // Layout split 50/50 perfetto
+        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        mainPanel.add(createFormPanel());
+        mainPanel.add(createImagePanel());
         add(mainPanel);
-        
-        // Premere Enter per login
-        passField.addActionListener(e -> {
-            String username = userField.getText().trim();
-            String password = new String(passField.getPassword());
-            LoginController.eseguiLogin(username, password, this);
-        });
     }
-    
-    // Metodo pubblico per mostrare messaggi (chiamato dal controller)
+
+    private JPanel createFormPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(60, 80, 60, 80));
+
+        // Font di sistema puliti e grandi
+        Font fontTitolo = new Font("Segoe UI", Font.BOLD, 42); 
+        Font fontSottotitolo = new Font("Segoe UI", Font.PLAIN, 18);
+        Font fontEtichetta = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontInput = new Font("Segoe UI", Font.PLAIN, 16);
+
+        JLabel titleLabel = new JLabel("<html>Login to<br>InventoryPro</html>");
+        titleLabel.setFont(fontTitolo);
+        
+        JLabel subtitleLabel = new JLabel("Inserisci le tue credenziali");
+        subtitleLabel.setFont(fontSottotitolo);
+        subtitleLabel.setForeground(Color.GRAY);
+
+        // Username
+        JLabel userLabel = new JLabel("USERNAME");
+        userLabel.setFont(fontEtichetta);
+        userLabel.setBorder(new EmptyBorder(40, 0, 5, 0));
+        
+        userField = new JTextField();
+        userField.setFont(fontInput);
+        userField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        userField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+
+        // Password
+        JLabel passLabel = new JLabel("PASSWORD");
+        passLabel.setFont(fontEtichetta);
+        passLabel.setBorder(new EmptyBorder(20, 0, 5, 0));
+        
+        passField = new JPasswordField();
+        passField.setFont(fontInput);
+        passField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        passField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+
+        // Bottone Login
+        loginBtn = new JButton("ACCEDI");
+        loginBtn.setBackground(new Color(255, 120, 30));
+        loginBtn.setForeground(Color.WHITE);
+        loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        loginBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
+        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginBtn.addActionListener(e -> LoginController.eseguiLogin(userField.getText(), new String(passField.getPassword()), this));
+
+        // Label Messaggi (Prenotiamo lo spazio con un'altezza fissa)
+        messageLabel = new JLabel(" "); 
+        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        messageLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        messageLabel.setPreferredSize(new Dimension(100, 40));
+
+        panel.add(titleLabel);
+        panel.add(subtitleLabel);
+        panel.add(userLabel);
+        panel.add(userField);
+        panel.add(passLabel);
+        panel.add(passField);
+        panel.add(Box.createRigidArea(new Dimension(0, 35)));
+        panel.add(loginBtn);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(messageLabel);
+
+        return panel;
+    }
+
+    private JPanel createImagePanel() {
+        return new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon icon = new ImageIcon("src/main/resources/background.jpg");
+                Image img = icon.getImage();
+                if (img != null) {
+                    Graphics2D g2d = (Graphics2D) g;
+                    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    int pW = getWidth(), pH = getHeight();
+                    double ratio = Math.max((double) pW / img.getWidth(null), (double) pH / img.getHeight(null));
+                    int w = (int) (img.getWidth(null) * ratio), h = (int) (img.getHeight(null) * ratio);
+                    g2d.drawImage(img, (pW - w) / 2, (pH - h) / 2, w, h, null);
+                }
+            }
+        };
+    }
+
     public void mostraMessaggio(String message, Color color) {
         messageLabel.setText(message);
         messageLabel.setForeground(color);
     }
-    
-    // Metodo pubblico per pulire il campo password (chiamato dal controller)
-    public void pulisciPassword() {
-        passField.setText("");
-    }
-    
+
+    public void pulisciPassword() { passField.setText(""); }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginSempliceV2 frame = new LoginSempliceV2();
-            frame.setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new LoginSempliceV2().setVisible(true));
     }
 }

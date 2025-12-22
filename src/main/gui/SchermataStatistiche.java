@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.List;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class SchermataStatistiche extends JPanel {
 
@@ -19,7 +20,7 @@ public class SchermataStatistiche extends JPanel {
 
     public SchermataStatistiche() {
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             System.err.println("Failed to initialize FlatLaf");
         }

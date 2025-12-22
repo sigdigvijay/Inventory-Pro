@@ -1,13 +1,10 @@
 package src.main.gui;
 
-import src.main.dao.ProductsDAO; // ✅
-
-
+import src.main.dao.ProductsDAO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class FormProdotto extends JDialog {
 
@@ -21,7 +18,7 @@ public class FormProdotto extends JDialog {
     public FormProdotto(Frame parent, String productId) {
         super(parent, true);
         try {
-            UIManager.setLookAndFeel(new FlatDarkLaf());
+            UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception ex) {
             System.err.println("Failed to initialize FlatLaf");
         }
@@ -29,7 +26,7 @@ public class FormProdotto extends JDialog {
         this.productId = productId;
 
         setTitle(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
-        setSize(500, 600);
+        setSize(500, 700); 
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
@@ -42,10 +39,14 @@ public class FormProdotto extends JDialog {
 
     private void initComponents() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        // Border con 0 sopra per ridurre lo spazio iniziale
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5,5,5,5);
+        gbc.insets = new Insets(2, 5, 2, 5); 
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0; 
+        gbc.weightx = 1.0;
 
         tfCode = new JTextField();
         tfName = new JTextField();
@@ -55,21 +56,42 @@ public class FormProdotto extends JDialog {
         tfMinStock = new JTextField();
         tfMaxStock = new JTextField();
         tfImage = new JTextField();
-        taDescription = new JTextArea(5, 20);
+        taDescription = new JTextArea(3, 20);
+        taDescription.setLineWrap(true);
+        taDescription.setWrapStyleWord(true);
         JScrollPane spDescription = new JScrollPane(taDescription);
 
         int row = 0;
-        panel.add(new JLabel("Codice Prodotto:"), gbcWithRow(gbc, row)); panel.add(tfCode, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Nome:"), gbcWithRow(gbc, row)); panel.add(tfName, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Descrizione:"), gbcWithRow(gbc, row)); panel.add(spDescription, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Prezzo Vendita:"), gbcWithRow(gbc, row)); panel.add(tfSalePrice, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Prezzo Acquisto:"), gbcWithRow(gbc, row)); panel.add(tfPurchasePrice, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Giacenza:"), gbcWithRow(gbc, row)); panel.add(tfStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Scorta Minima:"), gbcWithRow(gbc, row)); panel.add(tfMinStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Scorta Massima:"), gbcWithRow(gbc, row)); panel.add(tfMaxStock, gbcWithRow(gbc, row++));
-        panel.add(new JLabel("Immagine (path):"), gbcWithRow(gbc, row)); panel.add(tfImage, gbcWithRow(gbc, row++));
 
-        add(panel, BorderLayout.CENTER);
+        // Struttura: Label a riga N, Campo a riga N+1
+        panel.add(new JLabel("Codice Prodotto:"), gbcAt(gbc, row++)); 
+        panel.add(tfCode, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Nome:"), gbcAt(gbc, row++)); 
+        panel.add(tfName, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Descrizione:"), gbcAt(gbc, row++)); 
+        panel.add(spDescription, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Prezzo Vendita:"), gbcAt(gbc, row++)); 
+        panel.add(tfSalePrice, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Prezzo Acquisto:"), gbcAt(gbc, row++)); 
+        panel.add(tfPurchasePrice, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Giacenza:"), gbcAt(gbc, row++)); 
+        panel.add(tfStock, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Scorta Minima:"), gbcAt(gbc, row++)); 
+        panel.add(tfMinStock, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Scorta Massima:"), gbcAt(gbc, row++)); 
+        panel.add(tfMaxStock, gbcAt(gbc, row++));
+        
+        panel.add(new JLabel("Immagine (path):"), gbcAt(gbc, row++)); 
+        panel.add(tfImage, gbcAt(gbc, row++));
+
+        add(new JScrollPane(panel), BorderLayout.CENTER);
 
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnSave = new JButton("Salva");
@@ -83,11 +105,12 @@ public class FormProdotto extends JDialog {
         add(btnPanel, BorderLayout.SOUTH);
     }
 
-    private GridBagConstraints gbcWithRow(GridBagConstraints gbc, int row) {
+    private GridBagConstraints gbcAt(GridBagConstraints gbc, int row) {
         GridBagConstraints copy = (GridBagConstraints) gbc.clone();
         copy.gridy = row;
-        copy.gridx = 0;
-        copy.weightx = 0.3;
+        if (row % 2 != 0) {
+            copy.insets = new Insets(0, 5, 10, 5);
+        }
         return copy;
     }
 
@@ -111,13 +134,7 @@ public class FormProdotto extends JDialog {
     private void onSave(ActionEvent e) {
         String code = tfCode.getText().trim();
         String name = tfName.getText().trim();
-        String description = taDescription.getText().trim();
         String salePrice = tfSalePrice.getText().trim();
-        String purchasePrice = tfPurchasePrice.getText().trim();
-        String stock = tfStock.getText().trim();
-        String minStock = tfMinStock.getText().trim();
-        String maxStock = tfMaxStock.getText().trim();
-        String image = tfImage.getText().trim();
 
         if (code.isEmpty() || name.isEmpty() || salePrice.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Codice, Nome e Prezzo Vendita sono obbligatori", "Errore", JOptionPane.ERROR_MESSAGE);
@@ -131,10 +148,10 @@ public class FormProdotto extends JDialog {
 
         String id = productId != null ? productId : ProductsDAO.generateId();
         String[] productData = new String[]{
-                id, code, name, description, salePrice, purchasePrice, stock.isEmpty() ? "0" : stock,
-                minStock.isEmpty() ? "5" : minStock,
-                maxStock.isEmpty() ? "" : maxStock,
-                image.isEmpty() ? "" : image,
+                id, code, name, taDescription.getText().trim(), salePrice, tfPurchasePrice.getText().trim(),
+                tfStock.getText().trim().isEmpty() ? "0" : tfStock.getText().trim(),
+                tfMinStock.getText().trim().isEmpty() ? "5" : tfMinStock.getText().trim(),
+                tfMaxStock.getText().trim(), tfImage.getText().trim(),
                 String.valueOf(System.currentTimeMillis())
         };
 
@@ -150,13 +167,5 @@ public class FormProdotto extends JDialog {
 
     public boolean isSaved() {
         return saved;
-    }
-
-    // For testing
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            FormProdotto form = new FormProdotto(null, null);
-            form.setVisible(true);
-        });
     }
 }
