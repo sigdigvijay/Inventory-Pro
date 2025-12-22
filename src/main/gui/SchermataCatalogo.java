@@ -43,7 +43,7 @@ public class SchermataCatalogo extends JPanel {
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
 
-        JLabel lblSearch = new JLabel("🔍 Cerca prodotto:");
+        JLabel lblSearch = new JLabel("Cerca prodotto:");
         lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblSearch.setForeground(new Color(220, 220, 220));
 
@@ -77,7 +77,7 @@ public class SchermataCatalogo extends JPanel {
             }
         });
 
-        JButton btnRefresh = new JButton("↻ Aggiorna");
+        JButton btnRefresh = new JButton("Aggiorna");
         btnRefresh.setFont(new Font("Segoe UI", Font.BOLD, 13));
         btnRefresh.setBackground(new Color(60, 60, 60));
         btnRefresh.setForeground(Color.WHITE);
