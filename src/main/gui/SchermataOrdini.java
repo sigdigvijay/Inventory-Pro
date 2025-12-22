@@ -52,7 +52,7 @@ public class SchermataOrdini extends JPanel {
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonsPanel.setBackground(new Color(40, 40, 40));
 
-        JButton btnAdd = createStyledButton("Nuovo Ordine", new Color(40, 167, 69));
+        JButton btnAdd = createStyledButton("Nuovo Ordine", new Color(46, 125, 50));
         JButton btnReceive = createStyledButton("Ricevi Ordine", new Color(0, 120, 215));
         JButton btnRefresh = createStyledButton("Aggiorna", new Color(108, 117, 125));
 
