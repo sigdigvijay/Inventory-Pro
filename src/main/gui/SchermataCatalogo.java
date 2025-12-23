@@ -39,7 +39,6 @@ public class SchermataCatalogo extends JPanel {
 
 
     private void initComponents() {
-        // Top panel: search with modern styling
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
         topPanel.setBackground(new Color(40, 40, 40));
@@ -71,8 +70,7 @@ public class SchermataCatalogo extends JPanel {
         btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSearch.setPreferredSize(new Dimension(100, 38));
         btnSearch.addActionListener(e -> searchProducts());
-        
-        // Hover effect
+
         btnSearch.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnSearch.setBackground(new Color(0, 100, 180));
@@ -108,11 +106,9 @@ public class SchermataCatalogo extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // Center panel with table and action buttons
         JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
         centerPanel.setBackground(new Color(30, 30, 30));
 
-        // Table for products with modern styling
         String[] columns = {"", "ID", "Codice", "Nome", "Descrizione", "Prezzo Vendita", "Prezzo Acquisto", "Giacenza", "Scorta Minima", "Path Immagine"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
@@ -129,7 +125,7 @@ public class SchermataCatalogo extends JPanel {
         
         tableProducts = new JTable(tableModel);
         tableProducts.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        tableProducts.setRowHeight(60); // Altezza maggiore per le immagini
+        tableProducts.setRowHeight(60); 
         tableProducts.setFillsViewportHeight(true);
         tableProducts.setBackground(new Color(45, 45, 45));
         tableProducts.setForeground(new Color(230, 230, 230));
@@ -140,20 +136,17 @@ public class SchermataCatalogo extends JPanel {
         tableProducts.setShowHorizontalLines(true);
         tableProducts.setIntercellSpacing(new Dimension(1, 1));
 
-        // Custom renderer per le immagini
         tableProducts.getColumnModel().getColumn(0).setCellRenderer(new ImageCellRenderer());
         tableProducts.getColumnModel().getColumn(0).setPreferredWidth(60);
         tableProducts.getColumnModel().getColumn(0).setMaxWidth(60);
         tableProducts.getColumnModel().getColumn(0).setMinWidth(60);
 
-        // Center align cells (tranne la colonna immagine)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 1; i < tableProducts.getColumnCount(); i++) {
             tableProducts.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        // Style header
         JTableHeader header = tableProducts.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 13));
         header.setBackground(new Color(35, 35, 35));
@@ -161,7 +154,6 @@ public class SchermataCatalogo extends JPanel {
         header.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(0, 120, 215)));
         header.setPreferredSize(new Dimension(header.getWidth(), 40));
 
-        // Listener per mostrare l'anteprima grande quando si seleziona una riga
         tableProducts.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 showImagePreview();
@@ -174,11 +166,9 @@ public class SchermataCatalogo extends JPanel {
 
         centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Right panel with action buttons and image preview
         JPanel rightPanel = new JPanel(new BorderLayout(0, 10));
         rightPanel.setBackground(new Color(30, 30, 30));
 
-        // Action buttons panel
         JPanel actionPanel = new JPanel();
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
         actionPanel.setBackground(new Color(40, 40, 40));
@@ -204,7 +194,6 @@ public class SchermataCatalogo extends JPanel {
 
         rightPanel.add(actionPanel, BorderLayout.NORTH);
 
-        // Image preview panel
         JPanel previewPanel = new JPanel(new BorderLayout());
         previewPanel.setBackground(new Color(40, 40, 40));
         previewPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -236,7 +225,6 @@ public class SchermataCatalogo extends JPanel {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // Bottom info panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setBackground(new Color(40, 40, 40));
         bottomPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -251,13 +239,11 @@ public class SchermataCatalogo extends JPanel {
 
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Update count on load
         tableModel.addTableModelListener(e -> {
             lblInfo.setText("Totale prodotti: " + tableModel.getRowCount());
         });
     }
 
-    // Custom renderer per mostrare le immagini nella tabella
     private class ImageCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -348,8 +334,7 @@ public class SchermataCatalogo extends JPanel {
 
             ImageIcon icon = new ImageIcon(imagePath);
             Image img = icon.getImage();
-            
-            // Ridimensiona per la thumbnail nella tabella (50x50)
+
             int size = 50;
             int width = img.getWidth(null);
             int height = img.getHeight(null);
