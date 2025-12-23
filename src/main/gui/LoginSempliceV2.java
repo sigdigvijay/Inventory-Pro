@@ -26,6 +26,14 @@ public class LoginSempliceV2 extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
+        // Cambia l'icona della finestra
+    try {
+        ImageIcon icon = new ImageIcon("src/main/resources/logo.png");
+        setIconImage(icon.getImage());
+    } catch (Exception e) {
+        System.err.println("Impossibile caricare l'icona: " + e.getMessage());
+    }
+
         // Layout split 50/50 perfetto
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
         mainPanel.add(createFormPanel());
@@ -42,7 +50,7 @@ public class LoginSempliceV2 extends JFrame {
         // Font di sistema puliti e grandi
         Font fontTitolo = new Font("Segoe UI", Font.BOLD, 42); 
         Font fontSottotitolo = new Font("Segoe UI", Font.PLAIN, 18);
-        Font fontEtichetta = new Font("Segoe UI", Font.BOLD, 14);
+        Font fontEtichetta = new Font("Segoe UI Semibold", Font.PLAIN, 15);
         Font fontInput = new Font("Segoe UI", Font.PLAIN, 16);
 
         JLabel titleLabel = new JLabel("<html>Login to<br>InventoryPro</html>");
@@ -55,7 +63,7 @@ public class LoginSempliceV2 extends JFrame {
         subtitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Username
-        JLabel userLabel = new JLabel("USERNAME");
+        JLabel userLabel = new JLabel("Username");
         userLabel.setFont(fontEtichetta);
         userLabel.setBorder(new EmptyBorder(40, 0, 5, 0));
         userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -65,9 +73,19 @@ public class LoginSempliceV2 extends JFrame {
         userField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         userField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
         userField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Focus listener per bordo blu neon
+        userField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                userField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 149, 255), 2), new EmptyBorder(5, 10, 5, 10)));
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                userField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+            }
+        });
 
         // Password
-        JLabel passLabel = new JLabel("PASSWORD");
+        JLabel passLabel = new JLabel("Password");
         passLabel.setFont(fontEtichetta);
         passLabel.setBorder(new EmptyBorder(20, 0, 5, 0));
         passLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -77,16 +95,38 @@ public class LoginSempliceV2 extends JFrame {
         passField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         passField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
         passField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Focus listener per bordo blu neon
+        passField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                passField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(0, 149, 255), 2), new EmptyBorder(5, 10, 5, 10)));
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                passField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+            }
+        });
 
         // Bottone Login
         loginBtn = new JButton("ACCEDI");
-        loginBtn.setBackground(new Color(255, 120, 30));
+        loginBtn.setBackground(new Color(41, 128, 185));
         loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        loginBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
+        loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        loginBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
         loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        loginBtn.setFocusPainted(false);
+        loginBtn.setBorderPainted(false);
         loginBtn.addActionListener(e -> LoginController.eseguiLogin(userField.getText(), new String(passField.getPassword()), this));
+        
+        // Hover effect per il bottone
+        loginBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loginBtn.setBackground(new Color(52, 152, 219));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loginBtn.setBackground(new Color(41, 128, 185));
+            }
+        });
 
         // Label Messaggi (Prenotiamo lo spazio con un'altezza fissa)
         messageLabel = new JLabel(" "); 
