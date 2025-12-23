@@ -12,7 +12,7 @@ public class LoginController {
     
     public static void eseguiLogin(String username, String password, Object loginWindow) {
         if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
-            mostraMessaggio(loginWindow, "⚠️ Compilare tutti i campi.", Color.RED);
+            mostraMessaggio(loginWindow, "Compilare tutti i campi.", Color.RED);
             return;
         }
         
@@ -24,7 +24,7 @@ public class LoginController {
             }
             SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
         } else {
-            mostraMessaggio(loginWindow, "❌ Credenziali errate.", Color.RED);
+            mostraMessaggio(loginWindow, "Credenziali errate.", Color.RED);
             pulisciPassword(loginWindow);
         }
     }

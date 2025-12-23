@@ -47,30 +47,36 @@ public class LoginSempliceV2 extends JFrame {
 
         JLabel titleLabel = new JLabel("<html>Login to<br>InventoryPro</html>");
         titleLabel.setFont(fontTitolo);
+        titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JLabel subtitleLabel = new JLabel("Inserisci le tue credenziali");
         subtitleLabel.setFont(fontSottotitolo);
         subtitleLabel.setForeground(Color.GRAY);
+        subtitleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Username
         JLabel userLabel = new JLabel("USERNAME");
         userLabel.setFont(fontEtichetta);
         userLabel.setBorder(new EmptyBorder(40, 0, 5, 0));
+        userLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         userField = new JTextField();
         userField.setFont(fontInput);
         userField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         userField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+        userField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Password
         JLabel passLabel = new JLabel("PASSWORD");
         passLabel.setFont(fontEtichetta);
         passLabel.setBorder(new EmptyBorder(20, 0, 5, 0));
+        passLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         passField = new JPasswordField();
         passField.setFont(fontInput);
         passField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
         passField.setBorder(BorderFactory.createCompoundBorder(new LineBorder(new Color(200, 200, 200)), new EmptyBorder(5, 10, 5, 10)));
+        passField.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Bottone Login
         loginBtn = new JButton("ACCEDI");
@@ -79,13 +85,15 @@ public class LoginSempliceV2 extends JFrame {
         loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
         loginBtn.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
         loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
         loginBtn.addActionListener(e -> LoginController.eseguiLogin(userField.getText(), new String(passField.getPassword()), this));
 
         // Label Messaggi (Prenotiamo lo spazio con un'altezza fissa)
         messageLabel = new JLabel(" "); 
-        messageLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         messageLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         messageLabel.setPreferredSize(new Dimension(100, 40));
+        messageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(titleLabel);
         panel.add(subtitleLabel);
