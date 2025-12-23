@@ -86,19 +86,6 @@ public class MainFrame extends JFrame {
 
         leftPanel.add(titleLabel);
 
-        // Right side - Quick action button
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        rightPanel.setOpaque(false);
-
-        JButton btnAggiungiProdotto = new JButton("+ Aggiungi Prodotto");
-        styleActionButton(btnAggiungiProdotto, new Color(46, 125, 50));
-        btnAggiungiProdotto.addActionListener(e -> openFormProdotto());
-
-        rightPanel.add(btnAggiungiProdotto);
-       
-        header.add(leftPanel, BorderLayout.WEST);
-        header.add(rightPanel, BorderLayout.EAST);
-
         return header;
     }
 

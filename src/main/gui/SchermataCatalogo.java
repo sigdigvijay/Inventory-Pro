@@ -103,6 +103,10 @@ public class SchermataCatalogo extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
 
+        // Center panel with table and action buttons
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.setBackground(new Color(30, 30, 30));
+
         // Table for products with modern styling
         String[] columns = {"ID", "Codice", "Nome", "Descrizione", "Prezzo Vendita", "Prezzo Acquisto", "Giacenza", "Scorta Minima", "Immagine"};
         tableModel = new DefaultTableModel(columns, 0) {
@@ -144,7 +148,39 @@ public class SchermataCatalogo extends JPanel {
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(70, 70, 70), 1));
         scrollPane.getViewport().setBackground(new Color(45, 45, 45));
 
-        add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // Action buttons panel (right side)
+        JPanel actionPanel = new JPanel();
+        actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+        actionPanel.setBackground(new Color(40, 40, 40));
+        actionPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        ));
+
+        // Aggiungi button
+        JButton btnAdd = createActionButton("Aggiungi", new Color(34, 139, 34), new Color(28, 115, 28));
+        btnAdd.addActionListener(e -> aggiungiProdotto());
+
+        // Modifica button
+        JButton btnEdit = createActionButton("Modifica", new Color(255, 140, 0), new Color(220, 120, 0));
+        btnEdit.addActionListener(e -> modificaProdotto());
+
+        // Elimina button
+        JButton btnDelete = createActionButton("Elimina", new Color(220, 53, 69), new Color(180, 40, 55));
+        btnDelete.addActionListener(e -> eliminaProdotto());
+
+        actionPanel.add(btnAdd);
+        actionPanel.add(Box.createVerticalStrut(10));
+        actionPanel.add(btnEdit);
+        actionPanel.add(Box.createVerticalStrut(10));
+        actionPanel.add(btnDelete);
+        actionPanel.add(Box.createVerticalGlue());
+
+        centerPanel.add(actionPanel, BorderLayout.EAST);
+
+        add(centerPanel, BorderLayout.CENTER);
 
         // Bottom info panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -165,6 +201,89 @@ public class SchermataCatalogo extends JPanel {
         tableModel.addTableModelListener(e -> {
             lblInfo.setText("Totale prodotti: " + tableModel.getRowCount());
         });
+    }
+
+    private JButton createActionButton(String text, Color bgColor, Color hoverColor) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setMaximumSize(new Dimension(150, 40));
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(hoverColor);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(bgColor);
+            }
+        });
+        
+        return button;
+    }
+
+    private void aggiungiProdotto() {
+        // TODO: Implementare la logica per aggiungere un prodotto
+        JOptionPane.showMessageDialog(this, 
+            "Funzionalità 'Aggiungi Prodotto' da implementare", 
+            "Info", 
+            JOptionPane.INFORMATION_MESSAGE);
+        // Qui puoi aprire un dialog per inserire i dati del nuovo prodotto
+        // e poi chiamare ProductsDAO per salvarlo
+    }
+
+    private void modificaProdotto() {
+        int selectedRow = tableProducts.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, 
+                "Seleziona un prodotto da modificare", 
+                "Attenzione", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // TODO: Implementare la logica per modificare un prodotto
+        String productId = tableModel.getValueAt(selectedRow, 0).toString();
+        JOptionPane.showMessageDialog(this, 
+            "Funzionalità 'Modifica Prodotto' da implementare\nID Prodotto: " + productId, 
+            "Info", 
+            JOptionPane.INFORMATION_MESSAGE);
+        // Qui puoi aprire un dialog precompilato con i dati del prodotto
+        // e poi chiamare ProductsDAO per aggiornarlo
+    }
+
+    private void eliminaProdotto() {
+        int selectedRow = tableProducts.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, 
+                "Seleziona un prodotto da eliminare", 
+                "Attenzione", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        String productId = tableModel.getValueAt(selectedRow, 0).toString();
+        String productName = tableModel.getValueAt(selectedRow, 2).toString();
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Sei sicuro di voler eliminare il prodotto:\n" + productName + " (ID: " + productId + ")?", 
+            "Conferma Eliminazione", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            // TODO: Implementare la logica per eliminare un prodotto
+            // ProductsDAO.deleteProduct(productId);
+            JOptionPane.showMessageDialog(this, 
+                "Funzionalità 'Elimina Prodotto' da implementare", 
+                "Info", 
+                JOptionPane.INFORMATION_MESSAGE);
+            // refresh();
+        }
     }
 
     private void loadProducts() {
@@ -228,7 +347,7 @@ public class SchermataCatalogo extends JPanel {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Catalogo Prodotti");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1100, 600);
+            frame.setSize(1200, 600);
             frame.add(new SchermataCatalogo());
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

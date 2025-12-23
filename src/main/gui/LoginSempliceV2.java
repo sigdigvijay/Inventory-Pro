@@ -439,7 +439,7 @@ public class LoginSempliceV2 extends JFrame {
         final Point originalLocation = cardPanel.getLocation();
         shakeOffset = 0;
         
-        shakeTimer = new Timer(50, new ActionListener() {
+        shakeTimer = new Timer(10, new ActionListener() {
             int count = 0;
             int[] offsets = {-10, 10, -8, 8, -5, 5, -2, 2, 0};
             
