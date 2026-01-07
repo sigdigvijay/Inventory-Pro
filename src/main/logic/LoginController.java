@@ -16,9 +16,7 @@ public class LoginController {
             return;
         }
         
-        String ruolo = verificaCredenziali(username, password);
-
-        if (ruolo != null) {
+        if (verificaCredenziali(username, password)) {
             if (loginWindow instanceof JFrame) {
                 ((JFrame) loginWindow).dispose();
             }
@@ -29,17 +27,17 @@ public class LoginController {
         }
     }
     
-    private static String verificaCredenziali(String username, String password) {
+    private static boolean verificaCredenziali(String username, String password) {
         List<String[]> rows = CSVHelper.readCSV(CREDENTIALS_FILE);
         for (int i = 1; i < rows.size(); i++) {
             String[] row = rows.get(i);
-            if (row.length >= 3) { 
+            if (row.length >= 2) { 
                 if (row[0].trim().equalsIgnoreCase(username) && row[1].equals(password)) {
-                    return row[2]; 
+                    return true; 
                 }
             }
         }
-        return null;
+        return false;
     }
     
     private static void mostraMessaggio(Object loginWindow, String message, Color color) {

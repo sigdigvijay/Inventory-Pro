@@ -1,5 +1,3 @@
-username,password,ruolo
-admin,admin123,amministratore
-mario.rossi,password123,utente
-laura.bianchi,sicura456,utente
-paolo.verdi,test789,utente
+username,password,
+
+guest,guest,

@@ -128,7 +128,7 @@ public class LoginSempliceV2 extends JFrame {
             }
         });
 
-        // Label Messaggi (Prenotiamo lo spazio con un'altezza fissa)
+        // Label Messaggi 
         messageLabel = new JLabel(" "); 
         messageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         messageLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
