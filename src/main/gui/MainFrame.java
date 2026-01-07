@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
 
         setTitle("InventoryPro - Sistema di Gestione Magazzino");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1400, 900);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
 
         initComponents();

@@ -136,15 +136,16 @@ public class SchermataCatalogo extends JPanel {
         tableProducts.setShowHorizontalLines(true);
         tableProducts.setIntercellSpacing(new Dimension(1, 1));
 
+        // Renderer personalizzato per la colonna immagine
         tableProducts.getColumnModel().getColumn(0).setCellRenderer(new ImageCellRenderer());
         tableProducts.getColumnModel().getColumn(0).setPreferredWidth(60);
         tableProducts.getColumnModel().getColumn(0).setMaxWidth(60);
         tableProducts.getColumnModel().getColumn(0).setMinWidth(60);
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        // Renderer personalizzato per evidenziare in rosso
+        LowStockCellRenderer lowStockRenderer = new LowStockCellRenderer();
         for (int i = 1; i < tableProducts.getColumnCount(); i++) {
-            tableProducts.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            tableProducts.getColumnModel().getColumn(i).setCellRenderer(lowStockRenderer);
         }
 
         JTableHeader header = tableProducts.getTableHeader();
@@ -244,6 +245,57 @@ public class SchermataCatalogo extends JPanel {
         });
     }
 
+    // Renderer per celle normali con evidenziazione rossa
+    private class LowStockCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            setHorizontalAlignment(JLabel.CENTER);
+            
+            try {
+                // Ottieni giacenza e scorta minima (rimuovi " €" se presente)
+                String giacenzaStr = table.getValueAt(row, 7).toString().replace(" €", "").trim();
+                String scortaStr = table.getValueAt(row, 8).toString().replace(" €", "").trim();
+                
+                int giacenza = Integer.parseInt(giacenzaStr);
+                int scortaMinima = Integer.parseInt(scortaStr);
+                
+                // Se la giacenza è minore della scorta minima, evidenzia in rosso
+                if (giacenza < scortaMinima) {
+                    if (isSelected) {
+                        c.setBackground(new Color(180, 40, 55)); // Rosso scuro per selezione
+                    } else {
+                        c.setBackground(new Color(139, 0, 0)); // Rosso scuro
+                        c.setForeground(Color.WHITE);
+                    }
+                } else {
+                    // Colori normali
+                    if (isSelected) {
+                        c.setBackground(table.getSelectionBackground());
+                        c.setForeground(table.getSelectionForeground());
+                    } else {
+                        c.setBackground(table.getBackground());
+                        c.setForeground(table.getForeground());
+                    }
+                }
+            } catch (Exception e) {
+                // Se ci sono errori nel parsing, usa colori normali
+                if (isSelected) {
+                    c.setBackground(table.getSelectionBackground());
+                    c.setForeground(table.getSelectionForeground());
+                } else {
+                    c.setBackground(table.getBackground());
+                    c.setForeground(table.getForeground());
+                }
+            }
+            
+            return c;
+        }
+    }
+
     private class ImageCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -260,13 +312,36 @@ public class SchermataCatalogo extends JPanel {
                 label.setFont(new Font("Segoe UI", Font.PLAIN, 24));
             }
             
-            if (isSelected) {
-                label.setBackground(table.getSelectionBackground());
-                label.setOpaque(true);
-            } else {
-                label.setBackground(table.getBackground());
-                label.setOpaque(true);
+            // Controlla se la riga deve essere evidenziata in rosso
+            try {
+                String giacenzaStr = table.getValueAt(row, 7).toString().replace(" €", "").trim();
+                String scortaStr = table.getValueAt(row, 8).toString().replace(" €", "").trim();
+                
+                int giacenza = Integer.parseInt(giacenzaStr);
+                int scortaMinima = Integer.parseInt(scortaStr);
+                
+                if (giacenza < scortaMinima) {
+                    if (isSelected) {
+                        label.setBackground(new Color(180, 40, 55));
+                    } else {
+                        label.setBackground(new Color(139, 0, 0));
+                    }
+                } else {
+                    if (isSelected) {
+                        label.setBackground(table.getSelectionBackground());
+                    } else {
+                        label.setBackground(table.getBackground());
+                    }
+                }
+            } catch (Exception e) {
+                if (isSelected) {
+                    label.setBackground(table.getSelectionBackground());
+                } else {
+                    label.setBackground(table.getBackground());
+                }
             }
+            
+            label.setOpaque(true);
             
             return label;
         }
@@ -501,7 +576,7 @@ public class SchermataCatalogo extends JPanel {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("📦 Catalogo Prodotti");
+            JFrame frame = new JFrame("Catalogo Prodotti");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(1400, 700);
             frame.add(new SchermataCatalogo());

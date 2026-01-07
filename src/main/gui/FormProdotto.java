@@ -61,7 +61,7 @@ public class FormProdotto extends JDialog {
 
         this.productId = productId;
 
-        setTitle(productId == null ? "🆕 Nuovo Prodotto" : "✏️ Modifica Prodotto");
+        setTitle(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
         setSize(950, 800);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(0, 0));
@@ -158,7 +158,7 @@ public class FormProdotto extends JDialog {
         int row = 0;
 
         // Sezione Informazioni Base
-        addSectionTitle(formPanel, gbc, "📋 Informazioni Base", row++);
+        addSectionTitle(formPanel, gbc, "Informazioni Base", row++);
         addFormField(formPanel, gbc, "Codice Prodotto *", tfCode, row++);
         addFormField(formPanel, gbc, "Nome Prodotto *", tfName, row++);
         addFormField(formPanel, gbc, "Categoria *", cbCategory, row++);
@@ -178,18 +178,18 @@ public class FormProdotto extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Sezione Prezzi
-        addSectionTitle(formPanel, gbc, "💰 Prezzi", row++);
+        addSectionTitle(formPanel, gbc, "Prezzi", row++);
         addFormField(formPanel, gbc, "Prezzo Vendita (€) *", tfSalePrice, row++);
         addFormField(formPanel, gbc, "Prezzo Acquisto (€)", tfPurchasePrice, row++);
 
         // Sezione Magazzino
-        addSectionTitle(formPanel, gbc, "📦 Gestione Magazzino", row++);
+        addSectionTitle(formPanel, gbc, "Gestione Magazzino", row++);
         addFormField(formPanel, gbc, "Giacenza Attuale", tfStock, row++);
         addFormField(formPanel, gbc, "Scorta Minima *", tfMinStock, row++);
         addFormField(formPanel, gbc, "Scorta Massima", tfMaxStock, row++);
 
         // Sezione Immagine con anteprima
-        addSectionTitle(formPanel, gbc, "🖼️ Immagine Prodotto", row++);
+        addSectionTitle(formPanel, gbc, "Immagine Prodotto", row++);
         
         // Panel per selezione immagine
         JPanel imageSelectionPanel = new JPanel(new BorderLayout(10, 0));
@@ -263,7 +263,7 @@ public class FormProdotto extends JDialog {
         btnPanel.setOpaque(false);
 
         btnCancel = createStyledButton("Annulla", CANCEL_COLOR);
-        btnSave = createStyledButton("💾 Salva", SUCCESS_COLOR);
+        btnSave = createStyledButton("Salva", SUCCESS_COLOR);
 
         btnCancel.addActionListener(e -> dispose());
         btnSave.addActionListener(this::onSave);
