@@ -33,7 +33,7 @@ public class FormOrdine extends JDialog {
         }
 
         setTitle("Nuovo Ordine Fornitore");
-        setSize(900, 650);
+        setSize(900, 900);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(new Color(30, 30, 30));
@@ -51,9 +51,8 @@ public class FormOrdine extends JDialog {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(40, 40, 40));
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
-            new EmptyBorder(20, 20, 20, 20)
-        ));
+                BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+                new EmptyBorder(20, 20, 20, 20)));
 
         JLabel titleLabel = new JLabel("Dettagli Ordine");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -81,6 +80,7 @@ public class FormOrdine extends JDialog {
                     tfDeliveryDate.setForeground(Color.WHITE);
                 }
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (tfDeliveryDate.getText().isEmpty()) {
                     tfDeliveryDate.setText("YYYY-MM-DD");
@@ -106,14 +106,14 @@ public class FormOrdine extends JDialog {
         productsPanel.add(productsLabel, BorderLayout.NORTH);
 
         // Products table
-        String[] columns = {"ID Prodotto", "Nome Prodotto", "Quantità", "Prezzo Unitario", "Subtotale"};
+        String[] columns = { "ID Prodotto", "Nome Prodotto", "Quantità", "Prezzo Unitario", "Subtotale" };
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         tableProducts = new JTable(tableModel);
         tableProducts.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tableProducts.setRowHeight(40);
@@ -174,9 +174,8 @@ public class FormOrdine extends JDialog {
         JPanel bottomPanel = new JPanel(new BorderLayout(15, 0));
         bottomPanel.setBackground(new Color(40, 40, 40));
         bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(70, 70, 70)),
-            new EmptyBorder(15, 20, 15, 20)
-        ));
+                BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(70, 70, 70)),
+                new EmptyBorder(15, 20, 15, 20)));
 
         // Total panel
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
@@ -221,9 +220,8 @@ public class FormOrdine extends JDialog {
         textField.setForeground(Color.WHITE);
         textField.setCaretColor(Color.WHITE);
         textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
-            new EmptyBorder(8, 12, 8, 12)
-        ));
+                BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+                new EmptyBorder(8, 12, 8, 12)));
         return textField;
     }
 
@@ -255,6 +253,7 @@ public class FormOrdine extends JDialog {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(hoverColor);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(bgColor);
             }
@@ -265,14 +264,15 @@ public class FormOrdine extends JDialog {
 
     private void onAddProduct(ActionEvent e) {
         String productId = JOptionPane.showInputDialog(this, "Inserisci Product ID:");
-        if (productId == null || productId.isEmpty()) return;
+        if (productId == null || productId.isEmpty())
+            return;
 
         String[] product = ProductsDAO.getProductById(productId);
         if (product == null) {
-            JOptionPane.showMessageDialog(this, 
-                "❌ Prodotto non trovato!", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "❌ Prodotto non trovato!",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -280,12 +280,13 @@ public class FormOrdine extends JDialog {
         int qty;
         try {
             qty = Integer.parseInt(qtyStr);
-            if (qty <= 0) throw new NumberFormatException();
+            if (qty <= 0)
+                throw new NumberFormatException();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, 
-                "❌ Quantità non valida", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "❌ Quantità non valida",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -293,22 +294,23 @@ public class FormOrdine extends JDialog {
         double price;
         try {
             price = Double.parseDouble(priceStr);
-            if (price < 0) throw new NumberFormatException();
+            if (price < 0)
+                throw new NumberFormatException();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, 
-                "❌ Prezzo non valido", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "❌ Prezzo non valido",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         double subtotal = qty * price;
-        tableModel.addRow(new Object[]{
-            productId, 
-            product[2], 
-            qty, 
-            String.format("%.2f €", price),
-            String.format("%.2f €", subtotal)
+        tableModel.addRow(new Object[] {
+                productId,
+                product[2],
+                qty,
+                String.format("%.2f €", price),
+                String.format("%.2f €", subtotal)
         });
 
         updateTotal();
@@ -317,10 +319,10 @@ public class FormOrdine extends JDialog {
     private void onRemoveProduct(ActionEvent e) {
         int selectedRow = tableProducts.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, 
-                "⚠️ Seleziona un prodotto da rimuovere", 
-                "Attenzione", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "⚠️ Seleziona un prodotto da rimuovere",
+                    "Attenzione",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -332,7 +334,7 @@ public class FormOrdine extends JDialog {
         double total = 0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             String subtotalStr = tableModel.getValueAt(i, 4).toString()
-                .replace("€", "").replace(",", ".").trim();
+                    .replace("€", "").replace(",", ".").trim();
             try {
                 total += Double.parseDouble(subtotalStr);
             } catch (Exception ex) {
@@ -348,26 +350,26 @@ public class FormOrdine extends JDialog {
         String deliveryDate = tfDeliveryDate.getText().trim();
 
         if (orderNumber.isEmpty() || supplierId.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "⚠️ Numero ordine e ID fornitore sono obbligatori", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "⚠️ Numero ordine e ID fornitore sono obbligatori",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (deliveryDate.equals("YYYY-MM-DD") || deliveryDate.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "⚠️ Inserisci una data di consegna valida", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "⚠️ Inserisci una data di consegna valida",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (tableModel.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, 
-                "⚠️ Aggiungi almeno un prodotto all'ordine", 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "⚠️ Aggiungi almeno un prodotto all'ordine",
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -376,12 +378,12 @@ public class FormOrdine extends JDialog {
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             int qty = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
             String priceStr = tableModel.getValueAt(i, 3).toString()
-                .replace("€", "").replace(",", ".").trim();
+                    .replace("€", "").replace(",", ".").trim();
             double price = Double.parseDouble(priceStr);
             total += qty * price;
         }
 
-        String[] orderData = new String[]{
+        String[] orderData = new String[] {
                 orderId, orderNumber, supplierId, String.valueOf(System.currentTimeMillis()),
                 deliveryDate, "in_preparazione", String.valueOf(total), ""
         };
@@ -393,18 +395,18 @@ public class FormOrdine extends JDialog {
             String productId = tableModel.getValueAt(i, 0).toString();
             int qty = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
             String priceStr = tableModel.getValueAt(i, 3).toString()
-                .replace("€", "").replace(",", ".").trim();
+                    .replace("€", "").replace(",", ".").trim();
             double price = Double.parseDouble(priceStr);
 
-            String[] lineData = new String[]{lineId, orderId, productId, String.valueOf(qty), String.valueOf(price)};
+            String[] lineData = new String[] { lineId, orderId, productId, String.valueOf(qty), String.valueOf(price) };
             OrdineDAO.addOrderLine(lineData);
         }
 
         saved = true;
-        JOptionPane.showMessageDialog(this, 
-            "✅ Ordine salvato con successo!", 
-            "Successo", 
-            JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                "✅ Ordine salvato con successo!",
+                "Successo",
+                JOptionPane.INFORMATION_MESSAGE);
         dispose();
     }
 

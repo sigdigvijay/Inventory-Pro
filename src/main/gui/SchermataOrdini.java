@@ -35,20 +35,17 @@ public class SchermataOrdini extends JPanel {
     }
 
     private void initComponents() {
-        // Top panel with buttons
+
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(new Color(40, 40, 40));
         topPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
+                BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
-        // Title
         JLabel titleLabel = new JLabel("Gestione Ordini Fornitori");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(new Color(220, 220, 220));
 
-        // Buttons panel
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonsPanel.setBackground(new Color(40, 40, 40));
 
@@ -69,25 +66,26 @@ public class SchermataOrdini extends JPanel {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // Orders table
         JPanel tablePanel = new JPanel(new BorderLayout());
         tablePanel.setBackground(new Color(40, 40, 40));
         tablePanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
+                BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
         JLabel lblTable = new JLabel("Elenco Ordini");
         lblTable.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblTable.setForeground(new Color(220, 220, 220));
         lblTable.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-        String[] columns = {"ID", "N. Ordine", "Fornitore ID", "Data Ordine", "Data Consegna", "Stato", "Totale", "Note"};
+        String[] columns = { "ID", "N. Ordine", "Fornitore ID", "Data Ordine", "Data Consegna", "Stato", "Totale",
+                "Note" };
         ordersModel = new DefaultTableModel(columns, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-        
+
         tableOrders = new JTable(ordersModel);
         styleTable(tableOrders);
 
@@ -100,13 +98,11 @@ public class SchermataOrdini extends JPanel {
 
         add(tablePanel, BorderLayout.CENTER);
 
-        // Bottom info panel
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.setBackground(new Color(40, 40, 40));
         bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(70, 70, 70)),
-            BorderFactory.createEmptyBorder(10, 15, 10, 15)
-        ));
+                BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(70, 70, 70)),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
         lblOrderCount = new JLabel("Totale ordini: 0");
         lblOrderCount.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -125,18 +121,18 @@ public class SchermataOrdini extends JPanel {
         button.setBorderPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setPreferredSize(new Dimension(150, 38));
-        
-        // Hover effect
+
         Color darkerColor = bgColor.darker();
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(darkerColor);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setBackground(bgColor);
             }
         });
-        
+
         return button;
     }
 
@@ -159,7 +155,6 @@ public class SchermataOrdini extends JPanel {
             table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        // Custom renderer for Status column
         table.getColumnModel().getColumn(5).setCellRenderer(new StatusCellRenderer());
 
         JTableHeader header = table.getTableHeader();
@@ -172,13 +167,13 @@ public class SchermataOrdini extends JPanel {
 
     private void loadOrders() {
         ordersModel.setRowCount(0);
-        
+
         try {
             List<String[]> orders = OrdineDAO.getAllOrders();
-            
+
             for (String[] o : orders) {
                 try {
-                    // Ensure we have enough elements, pad with empty strings if needed
+
                     Object[] row = new Object[8];
                     for (int i = 0; i < 8; i++) {
                         row[i] = (o.length > i && o[i] != null) ? o[i] : "";
@@ -188,14 +183,14 @@ public class SchermataOrdini extends JPanel {
                     System.err.println("Errore nel caricamento ordine: " + e.getMessage());
                 }
             }
-            
+
             lblOrderCount.setText("Totale ordini: " + ordersModel.getRowCount());
         } catch (Exception e) {
             System.err.println("Errore nel caricamento ordini: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, 
-                "Errore nel caricamento degli ordini: " + e.getMessage(), 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Errore nel caricamento degli ordini: " + e.getMessage(),
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -205,82 +200,80 @@ public class SchermataOrdini extends JPanel {
             form.setVisible(true);
             if (form.isSaved()) {
                 loadOrders();
-                JOptionPane.showMessageDialog(this, 
-                    "Ordine creato con successo!", 
-                    "Successo", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Ordine creato con successo!",
+                        "Successo",
+                        JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (Exception ex) {
             System.err.println("Errore nella creazione ordine: " + ex.getMessage());
-            JOptionPane.showMessageDialog(this, 
-                "Errore nella creazione dell'ordine: " + ex.getMessage(), 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Errore nella creazione dell'ordine: " + ex.getMessage(),
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void onReceiveOrder(ActionEvent e) {
         int selectedRow = tableOrders.getSelectedRow();
         if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, 
-                "Seleziona un ordine da ricevere", 
-                "Attenzione", 
-                JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Seleziona un ordine da ricevere",
+                    "Attenzione",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
+
         try {
             Object orderIdObj = ordersModel.getValueAt(selectedRow, 0);
             if (orderIdObj == null || orderIdObj.toString().isEmpty()) {
-                JOptionPane.showMessageDialog(this, 
-                    "ID ordine non valido", 
-                    "Errore", 
-                    JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "ID ordine non valido",
+                        "Errore",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             String orderId = orderIdObj.toString();
             Object statusObj = ordersModel.getValueAt(selectedRow, 5);
             String status = statusObj != null ? statusObj.toString() : "";
-            
-            // Check if already received
+
             if ("Ricevuto".equalsIgnoreCase(status) || "Received".equalsIgnoreCase(status)) {
-                JOptionPane.showMessageDialog(this, 
-                    "Questo ordine è già stato ricevuto", 
-                    "Attenzione", 
-                    JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Questo ordine è già stato ricevuto",
+                        "Attenzione",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            
-            int confirm = JOptionPane.showConfirmDialog(this, 
-                "Confermi la ricezione dell'ordine #" + orderId + "?", 
-                "Conferma Ricezione", 
-                JOptionPane.YES_NO_OPTION);
-            
+
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Confermi la ricezione dell'ordine #" + orderId + "?",
+                    "Conferma Ricezione",
+                    JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
                 OrdineDAO.receiveOrder(orderId);
-                JOptionPane.showMessageDialog(this, 
-                    "Ordine ricevuto e giacenze aggiornate!", 
-                    "Successo", 
-                    JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Ordine ricevuto e giacenze aggiornate!",
+                        "Successo",
+                        JOptionPane.INFORMATION_MESSAGE);
                 loadOrders();
             }
         } catch (Exception ex) {
             System.err.println("Errore nella ricezione ordine: " + ex.getMessage());
-            JOptionPane.showMessageDialog(this, 
-                "Errore nella ricezione dell'ordine: " + ex.getMessage(), 
-                "Errore", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Errore nella ricezione dell'ordine: " + ex.getMessage(),
+                    "Errore",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Custom cell renderer for Status column
     private class StatusCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            
+
             if (!isSelected && value != null) {
                 String status = value.toString().toLowerCase();
                 if (status.contains("ricevuto") || status.contains("received")) {
@@ -297,18 +290,17 @@ public class SchermataOrdini extends JPanel {
                     c.setForeground(new Color(230, 230, 230));
                 }
             }
-            
+
             setHorizontalAlignment(JLabel.CENTER);
             return c;
         }
     }
 
-    // Test main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Ordini Fornitori");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1100, 700);
+            frame.setSize(1920, 1080);
             frame.add(new SchermataOrdini());
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

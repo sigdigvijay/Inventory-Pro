@@ -37,18 +37,18 @@ public class FormProdotto extends JDialog {
 
     // Categorie predefinite
     private static final String[] CATEGORIES = {
-        "Seleziona categoria...",
-        "Elettronica",
-        "Alimentari",
-        "Abbigliamento",
-        "Casa e Giardino",
-        "Sport e Tempo Libero",
-        "Libri e Riviste",
-        "Giocattoli",
-        "Salute e Bellezza",
-        "Automotive",
-        "Ufficio e Cancelleria",
-        "Altro"
+            "Seleziona categoria...",
+            "Elettronica",
+            "Alimentari",
+            "Abbigliamento",
+            "Casa e Giardino",
+            "Sport e Tempo Libero",
+            "Libri e Riviste",
+            "Giocattoli",
+            "Salute e Bellezza",
+            "Automotive",
+            "Ufficio e Cancelleria",
+            "Altro"
     };
 
     public FormProdotto(Frame parent, String productId) {
@@ -62,7 +62,7 @@ public class FormProdotto extends JDialog {
         this.productId = productId;
 
         setTitle(productId == null ? "Nuovo Prodotto" : "Modifica Prodotto");
-        setSize(950, 800);
+        setSize(900, 900);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(0, 0));
         getContentPane().setBackground(BACKGROUND_COLOR);
@@ -94,9 +94,8 @@ public class FormProdotto extends JDialog {
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
 
-        JLabel subtitleLabel = new JLabel(productId == null ? 
-            "Compila i campi per aggiungere un nuovo prodotto" : 
-            "Modifica le informazioni del prodotto");
+        JLabel subtitleLabel = new JLabel(productId == null ? "Compila i campi per aggiungere un nuovo prodotto"
+                : "Modifica le informazioni del prodotto");
         subtitleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         subtitleLabel.setForeground(new Color(230, 230, 230));
 
@@ -116,9 +115,8 @@ public class FormProdotto extends JDialog {
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(PANEL_COLOR);
         formPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
-            new EmptyBorder(25, 25, 25, 25)
-        ));
+                BorderFactory.createLineBorder(new Color(70, 70, 70), 1),
+                new EmptyBorder(25, 25, 25, 25)));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(8, 8, 8, 8);
@@ -134,17 +132,16 @@ public class FormProdotto extends JDialog {
         tfMaxStock = createStyledTextField();
         tfImage = createStyledTextField();
         tfImage.setEditable(false);
-        
+
         // ComboBox per le categorie
         cbCategory = new JComboBox<>(CATEGORIES);
         cbCategory.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         cbCategory.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
-            new EmptyBorder(5, 8, 5, 8)
-        ));
+                BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+                new EmptyBorder(5, 8, 5, 8)));
         cbCategory.setBackground(new Color(60, 60, 60));
         cbCategory.setForeground(new Color(200, 200, 200));
-        
+
         taDescription = new JTextArea(4, 20);
         taDescription.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         taDescription.setLineWrap(true);
@@ -162,14 +159,14 @@ public class FormProdotto extends JDialog {
         addFormField(formPanel, gbc, "Codice Prodotto *", tfCode, row++);
         addFormField(formPanel, gbc, "Nome Prodotto *", tfName, row++);
         addFormField(formPanel, gbc, "Categoria *", cbCategory, row++);
-        
+
         gbc.gridx = 0;
         gbc.gridy = row;
         gbc.weightx = 0.3;
         gbc.anchor = GridBagConstraints.NORTHWEST;
         JLabel lblDesc = createStyledLabel("Descrizione");
         formPanel.add(lblDesc, gbc);
-        
+
         gbc.gridx = 1;
         gbc.weightx = 0.7;
         gbc.fill = GridBagConstraints.BOTH;
@@ -190,30 +187,30 @@ public class FormProdotto extends JDialog {
 
         // Sezione Immagine con anteprima
         addSectionTitle(formPanel, gbc, "Immagine Prodotto", row++);
-        
+
         // Panel per selezione immagine
         JPanel imageSelectionPanel = new JPanel(new BorderLayout(10, 0));
         imageSelectionPanel.setOpaque(false);
-        
+
         btnSelectImage = createStyledButton("Sfoglia...", PRIMARY_COLOR);
         btnSelectImage.setPreferredSize(new Dimension(100, 35));
         btnSelectImage.addActionListener(e -> selectImage());
-        
+
         btnRemoveImage = createStyledButton("✕", CANCEL_COLOR);
         btnRemoveImage.setPreferredSize(new Dimension(45, 35));
         btnRemoveImage.addActionListener(e -> removeImage());
         btnRemoveImage.setEnabled(false);
-        
+
         JPanel btnImagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         btnImagePanel.setOpaque(false);
         btnImagePanel.add(btnSelectImage);
         btnImagePanel.add(btnRemoveImage);
-        
+
         imageSelectionPanel.add(tfImage, BorderLayout.CENTER);
         imageSelectionPanel.add(btnImagePanel, BorderLayout.EAST);
-        
+
         addFormField(formPanel, gbc, "File Immagine", imageSelectionPanel, row++);
-        
+
         // Anteprima immagine
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -221,26 +218,25 @@ public class FormProdotto extends JDialog {
         gbc.anchor = GridBagConstraints.NORTHWEST;
         JLabel lblPreviewLabel = createStyledLabel("Anteprima");
         formPanel.add(lblPreviewLabel, gbc);
-        
+
         gbc.gridx = 1;
         gbc.weightx = 0.7;
         gbc.anchor = GridBagConstraints.CENTER;
-        
+
         JPanel previewPanel = new JPanel(new BorderLayout());
         previewPanel.setOpaque(false);
-        
+
         lblImagePreview = new JLabel("Nessuna immagine selezionata");
         lblImagePreview.setPreferredSize(new Dimension(200, 200));
         lblImagePreview.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(80, 80, 80), 2),
-            new EmptyBorder(10, 10, 10, 10)
-        ));
+                BorderFactory.createLineBorder(new Color(80, 80, 80), 2),
+                new EmptyBorder(10, 10, 10, 10)));
         lblImagePreview.setHorizontalAlignment(JLabel.CENTER);
         lblImagePreview.setVerticalAlignment(JLabel.CENTER);
         lblImagePreview.setForeground(new Color(150, 150, 150));
         lblImagePreview.setBackground(new Color(40, 40, 40));
         lblImagePreview.setOpaque(true);
-        
+
         previewPanel.add(lblImagePreview, BorderLayout.CENTER);
         formPanel.add(previewPanel, gbc);
         row++;
@@ -270,7 +266,7 @@ public class FormProdotto extends JDialog {
 
         btnPanel.add(btnCancel);
         btnPanel.add(btnSave);
-        
+
         footerPanel.add(btnPanel, BorderLayout.EAST);
         add(footerPanel, BorderLayout.SOUTH);
     }
@@ -279,9 +275,8 @@ public class FormProdotto extends JDialog {
         JTextField tf = new JTextField();
         tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tf.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
-            new EmptyBorder(8, 10, 8, 10)
-        ));
+                BorderFactory.createLineBorder(new Color(80, 80, 80), 1),
+                new EmptyBorder(8, 10, 8, 10)));
         tf.setBackground(new Color(60, 60, 60));
         tf.setForeground(new Color(200, 200, 200));
         tf.setCaretColor(Color.WHITE);
@@ -304,17 +299,18 @@ public class FormProdotto extends JDialog {
         btn.setBorderPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setBorder(new EmptyBorder(10, 25, 10, 25));
-        
+
         // Hover effect
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btn.setBackground(bgColor.brighter());
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btn.setBackground(bgColor);
             }
         });
-        
+
         return btn;
     }
 
@@ -324,13 +320,13 @@ public class FormProdotto extends JDialog {
         gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(row == 0 ? 0 : 20, 8, 12, 8);
-        
+
         JLabel sectionLabel = new JLabel(title);
         sectionLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
         sectionLabel.setForeground(PRIMARY_COLOR);
-        
+
         panel.add(sectionLabel, gbc);
-        
+
         gbc.gridwidth = 1;
         gbc.insets = new Insets(8, 8, 8, 8);
     }
@@ -349,27 +345,27 @@ public class FormProdotto extends JDialog {
     private void selectImage() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleziona un'immagine per il prodotto");
-        
+
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-            "Immagini (*.jpg, *.jpeg, *.png, *.gif)", "jpg", "jpeg", "png", "gif");
+                "Immagini (*.jpg, *.jpeg, *.png, *.gif)", "jpg", "jpeg", "png", "gif");
         fileChooser.setFileFilter(filter);
-        
+
         // Imposta la directory corrente come punto di partenza
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-        
+
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
-            
+
             // Verifica dimensione file (max 5MB)
             if (selectedFile.length() > 5 * 1024 * 1024) {
                 showStyledError("L'immagine è troppo grande. Dimensione massima: 5MB");
                 return;
             }
-            
+
             selectedImagePath = selectedFile.getAbsolutePath();
             tfImage.setText(selectedFile.getName());
             btnRemoveImage.setEnabled(true);
-            
+
             // Mostra anteprima
             displayImagePreview(selectedImagePath);
         }
@@ -387,17 +383,17 @@ public class FormProdotto extends JDialog {
         try {
             ImageIcon icon = new ImageIcon(imagePath);
             Image img = icon.getImage();
-            
+
             // Calcola le dimensioni mantenendo le proporzioni
             int maxWidth = 200;
             int maxHeight = 200;
             int width = img.getWidth(null);
             int height = img.getHeight(null);
-            
+
             double ratio = Math.min((double) maxWidth / width, (double) maxHeight / height);
             int scaledWidth = (int) (width * ratio);
             int scaledHeight = (int) (height * ratio);
-            
+
             Image scaledImg = img.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
             lblImagePreview.setIcon(new ImageIcon(scaledImg));
             lblImagePreview.setText("");
@@ -413,14 +409,14 @@ public class FormProdotto extends JDialog {
             // Ottieni l'estensione del file
             String fileName = sourceFile.getName();
             String extension = fileName.substring(fileName.lastIndexOf("."));
-            
+
             // Genera un nome univoco per l'immagine
             String newFileName = "prod_" + System.currentTimeMillis() + extension;
             File destFile = new File(IMAGES_FOLDER, newFileName);
-            
+
             // Copia il file nella cartella del progetto
             Files.copy(sourceFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            
+
             return IMAGES_FOLDER + "/" + newFileName;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -440,14 +436,14 @@ public class FormProdotto extends JDialog {
                 tfStock.setText(p[6]);
                 tfMinStock.setText(p[7]);
                 tfMaxStock.setText(p[8]);
-                
+
                 // Carica l'immagine se presente
                 if (p.length > 9 && !p[9].isEmpty()) {
                     String imagePath = p[9];
                     tfImage.setText(new File(imagePath).getName());
                     selectedImagePath = imagePath;
                     btnRemoveImage.setEnabled(true);
-                    
+
                     // Verifica se il file esiste e mostra l'anteprima
                     File imageFile = new File(imagePath);
                     if (imageFile.exists()) {
@@ -456,7 +452,7 @@ public class FormProdotto extends JDialog {
                         lblImagePreview.setText("Immagine non trovata");
                     }
                 }
-                
+
                 // Carica la categoria se presente
                 if (p.length > 11 && !p[11].isEmpty()) {
                     cbCategory.setSelectedItem(p[11]);
@@ -502,7 +498,7 @@ public class FormProdotto extends JDialog {
                 showStyledError("Il prezzo di vendita deve essere maggiore di zero");
                 return;
             }
-            
+
             if (!purchasePrice.isEmpty()) {
                 double purchasePriceValue = Double.parseDouble(purchasePrice);
                 if (purchasePriceValue < 0) {
@@ -540,7 +536,7 @@ public class FormProdotto extends JDialog {
         String imagePath = "";
         if (!selectedImagePath.isEmpty()) {
             File sourceFile = new File(selectedImagePath);
-            
+
             // Se è un nuovo file (non già nella cartella del progetto), copialo
             if (!selectedImagePath.startsWith(IMAGES_FOLDER) && sourceFile.exists()) {
                 imagePath = copyImageToProductFolder(sourceFile);
@@ -554,13 +550,13 @@ public class FormProdotto extends JDialog {
         }
 
         String id = productId != null ? productId : ProductsDAO.generateId();
-        String[] productData = new String[]{
-                id, 
-                code, 
-                name, 
-                description, 
-                salePrice, 
-                purchasePrice, 
+        String[] productData = new String[] {
+                id,
+                code,
+                name,
+                description,
+                salePrice,
+                purchasePrice,
                 stock.isEmpty() ? "0" : stock,
                 minStock.isEmpty() ? "5" : minStock,
                 maxStock.isEmpty() ? "" : maxStock,
@@ -580,10 +576,10 @@ public class FormProdotto extends JDialog {
     }
 
     private void showStyledError(String message) {
-        JOptionPane.showMessageDialog(this, 
-            message, 
-            "⚠️ Attenzione", 
-            JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                message,
+                "⚠️ Attenzione",
+                JOptionPane.WARNING_MESSAGE);
     }
 
     public boolean isSaved() {
@@ -597,7 +593,7 @@ public class FormProdotto extends JDialog {
             if (!imageFile.exists()) {
                 return null;
             }
-            
+
             ImageIcon icon = new ImageIcon(imagePath);
             Image img = icon.getImage();
             Image scaledImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
